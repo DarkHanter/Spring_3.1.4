@@ -1,10 +1,8 @@
-const url = 'http://localhost:8080/admin/'
+const url = 'http://localhost:8080/'
 let userRoles =[]
 let getUsers = document.getElementById("getUsers")
-let getUserInfo = document.getElementById("getUser")
 getUserRoles()
 getAllUsers()
-getUser()
 
 fetch(url + 'auth')
     .then(response => response.json())
@@ -15,7 +13,7 @@ fetch(url + 'auth')
 
 function getAllUsers() {
     getUsers.innerHTML = ""
-    fetch(url + 'allUsers')
+    fetch(url + 'admin/allUsers')
         .then(response => response.json())
         .then(users => {
             users.forEach(function (user) {
@@ -45,42 +43,8 @@ function getAllUsers() {
         })
 }
 
-// function addUser() {
-//     let selected = []
-//     for (let option of document.getElementById('addRole').options)
-//     {
-//         if (option.selected) {
-//             selected.push(option.value);
-//         }
-//     }
-//     fetch(url + 'add', {
-//         method: 'POST',
-//         headers: {
-//             "Content-Type" : "application/json; charset=UTF-8"
-//         },
-//         body: JSON.stringify({
-//             firstName: document.getElementById('addFirstName').value,
-//             lastName: document.getElementById('addLastName').value,
-//             age: document.getElementById('addAge').value,
-//             email: document.getElementById('addEmail').value,
-//             password: document.getElementById('addPassword').value,
-//             roles: addRoleForUser(selected)
-//         })
-//     })
-//         //.then(response => response.json())
-//         .then(() => {
-//             document.getElementById('addFirstName').value = ''
-//             document.getElementById('addLastName').value = ''
-//             document.getElementById('addAge').value = ''
-//             document.getElementById('addEmail').value = ''
-//             document.getElementById('addPassword').value = ''
-//             document.getElementById('addRole').value = ''
-//             getAllUsers()
-//         })
-// }
-
 function getUserRoles() {
-    fetch(url + 'allRoles')
+    fetch(url + 'admin/allRoles')
         .then(response => response.json())
         .then(data => {
             userRoles = data
@@ -103,7 +67,7 @@ function addRoleForUser(role = []) {
 }
 
 function getDelete(id) {
-    fetch(url + 'user/' + id)
+    fetch(url + 'admin/user/' + id)
         .then(response => response.json())
         .then(user => {
             $('#delId').val(user.id)
@@ -117,7 +81,7 @@ function getDelete(id) {
 
 function deleteUser() {
     let id = document.getElementById('delId').value
-    fetch(url + 'delete/' + id, {
+    fetch(url + 'admin/delete/' + id, {
         method: 'DELETE'
     })
         .then(() => {
@@ -127,7 +91,7 @@ function deleteUser() {
 }
 
 function getEdit(id) {
-    fetch(url + 'user/' + id)
+    fetch(url + 'admin/user/' + id)
         .then(response => response.json())
         .then(user => {
             $('#editId').val(user.id)
@@ -135,59 +99,9 @@ function getEdit(id) {
             $('#editLastName').val(user.lastName)
             $('#editAge').val(user.age)
             $('#editEmail').val(user.email)
-        })
-}
+            $('#editPassword').val(user.password)
+            $('#editRole').show()
 
-function editUser() {
-    let selected = []
-    for (let option of document.getElementById('addRole').options)
-    {
-        if (option.selected) {
-            selected.push(option.value);
-        }
-    }
-    fetch(url + 'edit/', {
-        method: 'PUT',
-        headers: {
-            "Content-Type" : "application/json; charset=UTF-8"
-        },
-        body: JSON.stringify({
-            id: document.getElementById('editId').value,
-            firstName: document.getElementById('editFirstName').value,
-            lastName: document.getElementById('editLastName').value,
-            age: document.getElementById('editAge').value,
-            email: document.getElementById('editEmail').value,
-            password: document.getElementById('editPassword').value,
-            roles: addRoleForUser(selected)
-        })
-    })
-        .then(() => {
-            document.getElementById('editPassword').value = ''
-            document.getElementById('editRole').value = ''
-            getAllUsers();
-            $('#editUser').modal('hide');
-        })
-}
-
-function getUser() {
-    getUserInfo.innerHTML = ""
-    fetch(url + 'auth')
-        .then(response => response.json())
-        .then(user => {
-            let rows = getUserInfo.insertRow()
-            rows.setAttribute("id", user.id)
-            let cell0 = rows.insertCell();
-            cell0.innerHTML = user.id;
-            let cell1 = rows.insertCell();
-            cell1.innerHTML = user.firstName;
-            let cell11 = rows.insertCell();
-            cell11.innerHTML = user.lastName;
-            let cell2 = rows.insertCell();
-            cell2.innerHTML = user.age;
-            let cell3 = rows.insertCell();
-            cell3.innerHTML = user.email;
-            let cell5 = rows.insertCell();
-            cell5.innerHTML = user.roles.map(roleUser => roleUser.role);
         })
 }
 
@@ -236,7 +150,7 @@ function addUser() {
                     selected.push(option.value);
                 }
             }
-            fetch(url + 'add', {
+            fetch(url + 'admin/add', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=UTF-8"
@@ -264,7 +178,73 @@ function addUser() {
             console.log("something's wrong")
         }
     })
-
 }
 
+function editUser() {
+    let selected = []
+    $(document).ready(function () {
+        $("#editUserForm").validate({
+            messages: {
 
+                firstName: {
+                    required: "Please enter your first name"
+                },
+                lastName: {
+                    required: "Please enter your last name"
+                },
+                age: {
+                    required: "Please enter your age"
+                },
+                email: {
+                    required: "Please enter your email address"
+                },
+                password: {
+                    required: "Please enter your password"
+                },
+                roles: {
+                    required: "Please choose at least one role"
+                }
+            },
+            rules: {
+                firstName: "required",
+                lastName: "required",
+                age: "required",
+
+                email: {
+                    required: true,
+                    email: true,
+                },
+                password: "required",
+                roles: "required",
+            },
+
+        });
+        if ($("#editUserForm").valid()) {
+            for (let option of document.getElementById('editRole').options)
+            {
+                if (option.selected) {
+                    selected.push(option.value);
+                }
+            }
+        }
+        fetch(url + 'admin/edit/', {
+            method: 'PUT',
+            headers: {
+                "Content-Type" : "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                id: document.getElementById('editId').value,
+                firstName: document.getElementById('editFirstName').value,
+                lastName: document.getElementById('editLastName').value,
+                age: document.getElementById('editAge').value,
+                email: document.getElementById('editEmail').value,
+                password: document.getElementById('editPassword').value,
+                roles: addRoleForUser(selected)
+            })
+        })
+            .then(() => {
+                getAllUsers();
+                $('#editUser').modal('hide');
+            })
+    })
+}

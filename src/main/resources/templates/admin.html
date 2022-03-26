@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>Admin panel</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -136,7 +136,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="userTab">
+                <div class="tab-pane fade show" id="userTab">
                     <h2>User information page</h2>
                     <div class="container">
                         <h5>About user</h5>
@@ -189,9 +189,6 @@
                                     <input type="text" class="form-control" id="editFirstName"
                                            name="firstName"
                                            placeholder="First name" required>
-                                    <div class="invalid-feedback">
-                                        Please enter your First Name!
-                                    </div>
                                 </div>
 
                                 <div>
@@ -199,9 +196,6 @@
                                     <input type="text" class="form-control" id="editLastName"
                                            name="lastName"
                                            placeholder="Last name" required>
-                                    <div class="invalid-feedback">
-                                        Please enter your Last Name!
-                                    </div>
                                 </div>
 
                                 <div>
@@ -209,9 +203,6 @@
                                     <input type="text" class="form-control" id="editAge"
                                            name="age"
                                            placeholder="Age" required>
-                                    <div class="invalid-feedback">
-                                        Please enter your Age!
-                                    </div>
                                 </div>
 
                                 <div>
@@ -219,9 +210,6 @@
                                     <input type="email" class="form-control" id="editEmail"
                                            name="email"
                                            placeholder="Email" required>
-                                    <div class="invalid-feedback">
-                                        Please enter your Email!
-                                    </div>
                                 </div>
 
                                 <div>
@@ -230,9 +218,6 @@
                                            id="editPassword"
                                            name="password"
                                            placeholder="Password" required>
-                                    <div class="invalid-feedback">
-                                        Please enter your Email!
-                                    </div>
                                 </div>
 
                                 <div>
@@ -242,9 +227,6 @@
                                         <option value="1">ADMIN</option>
                                         <option value="2">USER</option>
                                     </select>
-                                    <div class="invalid-feedback">
-                                        Please choose at least one role!
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -319,57 +301,8 @@
     </div>
 </div>
 
-<div id="modalWindow"></div>
-<script src="/admin.js"></script>
-<!--<script>-->
-<!--    $(document).ready(function() {-->
-<!--        $("#addUserForm").validate({-->
-<!--            messages: {-->
-
-<!--                firstName: {-->
-<!--                    required: "Please enter your first name"-->
-<!--                },-->
-<!--                lastName: {-->
-<!--                    required: "Please enter your last name"-->
-<!--                },-->
-<!--                age: {-->
-<!--                    required: "Please enter your age"-->
-<!--                },-->
-<!--                email: {-->
-<!--                    required: "Please enter your email address"-->
-<!--                },-->
-<!--                password: {-->
-<!--                    required: "Please enter your password"-->
-<!--                },-->
-<!--                roles: {-->
-<!--                    required: "Please choose at least one role"-->
-<!--                }-->
-<!--            },-->
-<!--            rules: {-->
-<!--                firstName: "required",-->
-<!--                lastName: "required",-->
-<!--                age: "required",-->
-
-<!--                email: { // compound rule-->
-<!--                    required: true,-->
-<!--                    email: true,-->
-<!--                },-->
-<!--                password: "required",-->
-<!--                roles: "required",-->
-<!--                //country: "required",-->
-<!--                //amount: "required",-->
-<!--            },-->
-
-<!--        });-->
-
-
-
-<!--        $('#addUs').click(function() {-->
-<!--            $("#addUserForm").valid();-->
-
-<!--        });-->
-<!--    });-->
-<!--</script>-->
+<script sec:authorize="hasAnyRole('ADMIN', 'USER')" src="/user.js"></script>
+<script sec:authorize="hasRole('ADMIN')" src="/admin.js"></script>
 
 </body>
 </html>

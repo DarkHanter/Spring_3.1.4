@@ -36,21 +36,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-//                .authorizeRequests()
-//                .antMatchers("/", "/index").permitAll()
-//                .antMatchers("/admin/**").access("hasRole('ADMIN')")
-//                .antMatchers("/user/**").access("hasRole('ADMIN') and hasRole('USER')")
-//                .antMatchers("/user/**").access("hasRole('USER')")
-//                .and()
-//                .formLogin().successHandler(successUserHandler)
-//                .and()
-//                .logout()
                 .authorizeRequests()
                 .antMatchers("/", "/index").permitAll()
                 .antMatchers("/admin/**").access("hasRole('ADMIN')")
-                //.antMatchers("/user/**").access("hasRole('ADMIN') or hasRole('USER')")
-                //.antMatchers("/user/**").access("hasRole('ADMIN') and hasRole('USER')")
-                //.antMatchers("/user/**").access("hasRole('USER')")
+                .antMatchers("/user").access("hasRole('USER')")
+                .antMatchers("/auth").access("hasAnyRole('USER', 'ADMIN')")
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -62,23 +52,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .and().csrf().disable();
     }
-
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
-
-    // аутентификация inMemory
-//    @Bean
-//    @Override
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("user")
-//                        .roles("USER")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
 }

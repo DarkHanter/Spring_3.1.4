@@ -26,50 +26,39 @@ public class RestController {
     }
 
     @GetMapping(value="/admin/allUsers")
-    public List<User> showAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> showAllUsers() {
+        return ResponseEntity.ok().body(userService.getAllUsers());
     }
 
     @GetMapping(value="/admin/allRoles")
-    public List<Role> showAllRoles() {
-        return roleService.getAllRoles();
+    public ResponseEntity<List<Role>> showAllRoles() {
+        return ResponseEntity.ok().body(roleService.getAllRoles());
     }
 
     @GetMapping("/admin/user/{id}")
-    public ResponseEntity<User> getUser(@PathVariable("id") int id) {
-        //return userService.getUser(id);
+    public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
         return ResponseEntity.ok().body(userService.getUser(id));
     }
 
-//    @PutMapping(value = "/admin/edit")
-//    public User editUser(@RequestBody User user) {
-//        userService.editUser(user);
-//        return user;
-//    }
-
     @PutMapping(value = "/admin/edit")
-    public void editUser(@RequestBody User user) {
+    public ResponseEntity<User> editUser(@RequestBody User user) {
         userService.editUser(user);
+        return ResponseEntity.ok().body(user);
     }
 
-//    @DeleteMapping(value = "/admin/delete/{id}")
-//    public ResponseEntity<User> deleteUser(@PathVariable("id") int id) {
-//        userService.removeUser(id);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-
     @DeleteMapping(value = "/admin/delete/{id}")
-    public void deleteUser(@PathVariable("id") int id) {
+    public ResponseEntity<User> deleteUser(@PathVariable("id") Long id) {
         userService.removeUser(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(value = "/admin/add")
-    public void addUser(@RequestBody User user) {
+    public ResponseEntity<User> addUser(@RequestBody User user) {
         userService.addUser(user);
-        //return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(value = "/admin/auth")
+    @GetMapping(value = "/auth")
     public ResponseEntity<User> getUserPage(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok().body(user);
     }
